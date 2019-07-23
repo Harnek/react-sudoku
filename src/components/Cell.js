@@ -4,14 +4,19 @@
 import React from 'react';
 
 function Cell(props) {
-  const { value, winPos, onClick } = props;
-  let winClass = '';
-  if (winPos) {
-    winClass = ' winCell'
+  const { value, status, onClick } = props;
+  const classes = ['cell'];
+
+  if (status) {
+    if (status === 1) {
+      classes.push('light');
+    }else if (status === 2) {
+      classes.push('dark');
+    }
   }
 
   return (
-    <td className={`cell${winClass}`} onClick={(e) => onClick(e)}>
+    <td className={classes.join(' ')} onClick={(e) => onClick(e)}>
       {value}
     </td>
   );

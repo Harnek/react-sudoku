@@ -7,7 +7,7 @@ import '../style.css';
 function Menu() {
   return (
     <div className='menu'>
-      <Link to='/game/'>New Game</Link>
+      <Link to='/'>New Game</Link>
     </div>
   )
 }
@@ -16,11 +16,8 @@ function App() {
   
   return (
     <Router>
-      <Route path="/" exact component={Menu} />
-      <Route 
-        path='/game/'
-        component={Board}
-      />
+      <Route path="/menu" exact component={Menu} />
+      <Route path='/' exact component={Board} />
     </Router>
   );
 }

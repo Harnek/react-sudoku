@@ -3,11 +3,18 @@ import React from 'react';
 import Cell from './Cell';
 
 function Row(props) {
-  const { row, winPos, onClick } = props;
+  const { row, cols, status, onClick } = props;
+
   return (
     <tr className='row'>
-      { row.map((cell, index) => {
-          return <Cell value={cell} onClick={onClick} winPos={winPos.includes(index)} />
+      { cols.map((value, col) => {
+          return (
+            <Cell 
+              value={value} 
+              status={status[row][col]}
+              onClick={onClick}
+            />
+          )
         })
       }
     </tr>

@@ -3,13 +3,14 @@
 /* eslint-disable react/prop-types */
 import React, { Fragment, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { isDone } from '../utils/boardUtil';
+import { generate, getConflicts, isDone } from '../utils/boardUtil';
 import Row from './Row';
+import Cell from './Cell';
 
 function Board() {
-  const [board, setBoard] = useState(Array(9).fill(Array(9).fill(null)));
+  const [board, setBoard] = useState(generate());
   const [num, setNum] = useState(1);
-  const [winPos, setWinPos] = useState([]);
+  let status = getConflicts(board);
 
   const handleClick = (e) => {
     const row = e.target.parentNode.rowIndex;
@@ -34,46 +35,37 @@ function Board() {
   }
 
   useEffect(() => {
-    const [ result, positions ] = isDone(board)
-    if (result) {
-      setWinPos(positions);
-
-      setTimeout(() => {
-        setWinPos([]);
-      }, 3000)
-    }
-
+    status = getConflicts(board);
   }, [board])
 
   return (
     <Fragment>
       <table className='board'>
         <tbody>
-          { board.map((row, index) => (
+          { board.map((value, index) => (
             <Row
-              key={index}
-              row={row}
-              winPos={
-                winPos
-                .filter((pos) => pos[0] === index)
-                .map((pos) => pos[1])
-              }
+              row={index}
+              cols={value}
+              status={status}
               onClick={handleClick} 
             />
-            )
-          )}
+          ))}
         </tbody>
       </table>
       <table className='tools'>
         <tbody>
-          <Row
-            row={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
-            winPos={[]}
-            onClick={handleToolClick} 
-          />
+          <tr className='row'>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((value) => (
+              <Cell 
+                value={value}
+                status={0}
+                onClick={handleToolClick}
+              />
+            ))}
+          </tr>
         </tbody>
       </table>
-      <Link to='/'>Menu</Link>
+      <Link to='/menu/'>Menu</Link>
     </Fragment>
   );
 }

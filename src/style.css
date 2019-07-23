@@ -59,12 +59,28 @@ p, th, td, li, dd, dt, ul, ol, blockquote, q, acronym, abbr, a, input, select, t
 }
 
 .cell {
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border: 1px solid;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.light {
+  background-color: #ffd2d2;
+}
+
+.dark {
+  background-color: #b74040;
+}
+
+.row:nth-child(3n + 3):not(:last-child) .cell{
+  border-bottom: 2px solid black;
+}
+
+.cell:nth-child(3n + 3):not(:last-child) {
+  border-right: 2px solid black;
 }
 
 .winCell {
