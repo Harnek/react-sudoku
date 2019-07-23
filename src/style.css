@@ -1,0 +1,84 @@
+*, *::after, *::before {
+    margin: 0;
+    padding: 0;
+}
+
+*,:after,:before,input {
+  box-sizing: border-box;
+  position: relative;
+  font-family: Helvetica, sans-serif;
+  color: rgb(119, 119, 119);
+}
+
+*:not(input), #title {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+html {
+  font-size: 1.25em;
+}
+html, body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+}
+p, th, td, li, dd, dt, ul, ol, blockquote, q, acronym, abbr, a, input, select, textarea {
+  margin: 0;
+  padding: 0;
+}
+:focus {
+  outline: none;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.board {
+  border: 1px solid;
+  border-collapse: collapse;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.cell {
+  width: 30px;
+  height: 30px;
+  border: 1px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.winCell {
+  background-color: aquamarine;
+}
+
+.tools .cell {
+  cursor: pointer;
+}
+
+.tools .cell:hover {
+  background-color: darkgrey
+}
+
+.tools .cell:active {
+  background-color: grey;
+}
