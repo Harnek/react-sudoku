@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Board from './Board';
@@ -7,17 +6,28 @@ import '../style.css';
 function Menu() {
   return (
     <div className='menu'>
-      <Link to='/'>New Game</Link>
+      <Link to='/game'>New Game</Link>
     </div>
   )
 }
 
-function App() {
+// const Child = ({ match }) => {
+//   console.log(match)
   
+//   return (
+//     <div>
+//       <h3>ID: {match.params.id}</h3>
+//     </div>
+//   )
+// }
+
+function App() {
+
   return (
     <Router>
-      <Route path="/menu" exact component={Menu} />
-      <Route path='/' exact component={Board} />
+      {/* <Route path="/" component={Child} /> */}
+      <Route path="/" exact component={Menu} />
+      <Route path="/game" exact component={Board} />
     </Router>
   );
 }
