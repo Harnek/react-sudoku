@@ -27,6 +27,19 @@ module.exports = {
         exclude: /node_modules/,
         use: ['babel-loader'],// , 'eslint-loader'],
       },
+      {
+        test: /\.ttf$/, 
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              publicPath: './',
+              name: "./fonts/[name].[ext]",
+              limit: 8192,
+            },
+          }
+        ],
+      },
     ],
   },
   resolve: {

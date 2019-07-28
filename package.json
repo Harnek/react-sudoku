@@ -33,9 +33,11 @@
     "eslint-plugin-jsx-a11y": "6.2.3",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "7.14.2",
+    "file-loader": "^4.1.0",
     "prettier": "^1.18.2",
     "react-hot-loader": "^4.12.8",
     "style-loader": "^0.23.1",
+    "url-loader": "^2.1.0",
     "webpack": "^4.35.2",
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2"

@@ -1,5 +1,12 @@
 /* RESET CSS */
 
+@font-face {
+  font-family: 'ABeeZee';
+  src:  url('./fonts/ABeeZee-Regular.ttf');
+  font-weight: 600;
+  font-style: normal;
+}
+
 *, *::after, *::before {
     margin: 0;
     padding: 0;
@@ -8,7 +15,6 @@
 *,:after,:before,input {
   box-sizing: border-box;
   position: relative;
-  font-family: Helvetica, sans-serif;
   color: rgb(119, 119, 119);
 }
 
@@ -22,7 +28,7 @@
 }
 
 html {
-  font-size: 1.25em;
+  font-size: 16px;
 }
 
 html, body {
@@ -56,9 +62,17 @@ p, th, td, li, dd, dt, ul, ol, blockquote, q, acronym, abbr, a, input, select, t
   height: 100%;
 }
 
-.nav {
+.intro {
+  font-family: 'ABeeZee';
+  font-size: 2rem;
+  border-bottom: 2px solid #b74040;
+}
+
+.timer {
+  font-size: 1.2rem;
+  font-weight: 600;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
 }
 
@@ -81,12 +95,14 @@ p, th, td, li, dd, dt, ul, ol, blockquote, q, acronym, abbr, a, input, select, t
 }
 
 .cell {
-  cursor: pointer;
-  width: 35px;
-  height: 35px;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 35px;
+  height: 35px;
+  font-size: 1.2rem;
+  /* font-weight: 400; */
+  cursor: pointer;
   transition: all 0.5s ease;
   color: black;
 }
@@ -141,7 +157,6 @@ p, th, td, li, dd, dt, ul, ol, blockquote, q, acronym, abbr, a, input, select, t
 }
 
 .tool {
-  text-transform: uppercase;
   font-weight: 700;
   cursor: pointer;
   margin: 1em;

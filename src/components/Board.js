@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useReducer } from 'react';
-import { Link } from 'react-router-dom';
 import { generate, getConflicts } from '../utils/boardUtil';
 import Row from './Row';
 
@@ -99,16 +98,34 @@ function reducer(state, action) {
   }
 }
 
+function convertTime(time) {
+  let s = String(time % 60);
+  if (s.length === 1) {
+    s = `0${time % 60}`
+  }
+
+  if (time < 10) {
+    return `Time 0:${s}`
+  }
+  if (time < 60) {
+    return `Time 0:${s}`
+  }
+
+  if (time < 3600) {
+    return `Time ${Math.floor(time / 60)}:${s}`
+  }
+
+  return `99:59`
+}
+
 function Board() {
-  const [state, dispatch] = useReducer(reducer, {
-    board: [], preFilled: [], choice: 1, history: [], historyPos: -1, status: [], selected: null,
-  });
-  const [click, setClick] = useState({ id: null, x: null, y: null });
+  const [state, dispatch] = useReducer(reducer, init(generate()));
+  const [clickId, setClickId] = useState(null);
   const [timer, setTimer] = useState(0);
 
   useEffect(() => {
-    const board = generate();
-    dispatch({ type: 'init', payload: { board } })
+    // const board = generate();
+    // dispatch({ type: 'init', payload: { board } })
 
     const intervalID = setInterval(() => {
       setTimer((prevTime) => prevTime + 1);
@@ -128,17 +145,17 @@ function Board() {
 
     if (e.type === "mousedown") {
       const id = setTimeout(() => {
-        setClick(() => ({ ...click, id: null }));
+        setClickId(() => null);
       }, 250);
-      setClick(() => ({ id, x, y }));
+      setClickId(() => id);
     } else {
-      clearTimeout(click.id);
+      clearTimeout(clickId);
 
       if (state.preFilled[x][y]) {
         dispatch({ type: 'select', payload: { selected: state.board[x][y] } })
       }
       else if (state.board[x][y] !== null) {
-        if (click.id === null) {
+        if (clickId === null) {
           dispatch({ type: 'clear', payload: { x, y } })
         } else {
           dispatch({ type: 'select', payload: { selected: state.board[x][y] } })
@@ -155,35 +172,10 @@ function Board() {
     dispatch({ type: 'choice', payload: { choice: n } })
   }
 
-  const getTime = () => {
-    let s = String(timer % 60);
-    if (s.length === 1) {
-      s = `0${timer % 60}`
-    }
-
-    if (timer < 10) {
-      return `Time 0:${s}`
-    }
-    if (timer < 60) {
-      return `Time 0:${s}`
-    }
-
-    if (timer < 3600) {
-      return `Time ${Math.floor(timer / 60)}:${s}`
-    }
-
-    return `99:59`
-  }
-
-  if (!state.board.length) {
-    return <div>Loading</div>
-  }
-
   return (
     <div className='game'>
-      <div className='nav'>
-        <Link to='/'>Menu</Link>
-        {getTime()}
+      <div className='timer'>
+        {convertTime(timer)}
       </div>
       <table className='board'>
         <tbody>
