@@ -1,7 +1,7 @@
 # react-sudoku
 
 # see demo
-[tic tac toe](https://harnek.github.io/react-sudoku/dist/index.html)
+Play here [Sudoku](https://harnek.github.io/react-sudoku/dist/index.html)
 
 # usage
 The goal is to fill all the grids with number from 1 - 9.
