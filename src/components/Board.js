@@ -1,14 +1,16 @@
+import PropTypes from 'prop-types';
 import React, { useEffect, useReducer, useState } from 'react';
-import { generate } from '../utils/boardUtil';
+import { generate, isDone } from '../utils/boardUtil';
 import convertTime from '../utils/other';
 import Row from './Row';
 import Tools from './Tools';
 import reducer, { init } from './useBoardReducer';
 
-function Board() {
+function Board(props) {
   const [state, dispatch] = useReducer(reducer, init(generate()));
   const [clickId, setClickId] = useState(null);
   const [timer, setTimer] = useState(0);
+  const { gameOver } = props;
 
   useEffect(() => {
     const intervalID = setInterval(() => {
@@ -20,7 +22,11 @@ function Board() {
     };
   }, []);
 
-  useEffect(() => {}, [state, timer]);
+  useEffect(() => {
+    if (isDone(state.board)) {
+      gameOver();
+    }
+  }, [gameOver, state, timer]);
 
   const handleEvent = e => {
     const x = e.target.parentNode.rowIndex;
@@ -74,11 +80,17 @@ function Board() {
       </table>
       <Tools
         choice={state.choice}
-        handleChoiceClick={choice => dispatch({ type: 'choice', payload: { choice } })}
+        handleChoiceClick={choice =>
+          dispatch({ type: 'choice', payload: { choice } })
+        }
         handleOptionClick={type => dispatch({ type })}
       />
     </div>
   );
 }
+
+Board.propTypes = {
+  gameOver: PropTypes.func.isRequired,
+};
 
 export default Board;

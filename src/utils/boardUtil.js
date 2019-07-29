@@ -122,23 +122,22 @@ const getConflicts = (board) => {
   return status
 }
 
-/* eslint-disable no-param-reassign */
 const isDone = (board) => {
   for (let i = 0; i < board.length; i += 1) {
     
-    const doneRow = []
-    const doneCol = []
+    const row = new Set();
+    const col = new Set();
 
     for (let j = 0; j < board[i].length; j += 1) {
-      if (!board[i][j] || doneRow.includes(board[i][j])) {
+      if (!board[i][j] || row.has(board[i][j])) {
         return false
       }
-      doneRow.push(board[i][j]);
+      row.add(board[i][j]);
 
-      if (!board[j][i] || doneCol.includes(board[j][i])) {
-        doneCol.push(board[j][i]);
+      if (!board[j][i] || col.has(board[j][i])) {
+        return false;
       }
-      doneCol.push(board[j][i]);
+      col.add(board[j][i]);
     }
   }
 
