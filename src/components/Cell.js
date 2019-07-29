@@ -16,14 +16,14 @@ function Cell(props) {
       classes.push('dark');
     }
   } else if (value && selected) {
-    classes.push('selected')
+    classes.push('selected');
   }
 
   return (
     <td
       className={classes.join(' ')}
-      onMouseDown={(e) => handleEvent(e)}
-      onMouseUp={(e) => handleEvent(e)}
+      onMouseDown={e => handleEvent(e)}
+      onMouseUp={e => handleEvent(e)}
     >
       {value}
     </td>
@@ -36,6 +36,6 @@ Cell.propTypes = {
   preFilled: PropTypes.bool.isRequired,
   selected: PropTypes.bool.isRequired,
   handleEvent: PropTypes.func.isRequired,
-}
+};
 
 export default Cell;

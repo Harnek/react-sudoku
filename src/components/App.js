@@ -7,11 +7,11 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       setFlag(true);
-    }, 1500)
-  }, [])
+    }, 1500);
+  }, []);
 
   if (!flag) {
-    return <div className='intro'>Sudoku</div>
+    return <div className="intro">Sudoku</div>;
   }
   return <Board />;
 }

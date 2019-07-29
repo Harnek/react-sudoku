@@ -7,23 +7,23 @@
     https://github.com/robatron/sudoku.js/
 */
 
-var sudoku = {};  // Global reference to the sudoku library
+const sudoku = {};  // Global reference to the sudoku library
 
 sudoku.DIGITS = "123456789";    // Allowed sudoku.DIGITS
-var ROWS = "ABCDEFGHI";         // Row lables
-var COLS = sudoku.DIGITS;       // Column lables
-var SQUARES = null;             // Square IDs
+const ROWS = "ABCDEFGHI";         // Row lables
+const COLS = sudoku.DIGITS;       // Column lables
+let SQUARES = null;             // Square IDs
 
-var UNITS = null;               // All units (row, column, or box)
-var SQUARE_UNITS_MAP = null;    // Squares -> units map
-var SQUARE_PEERS_MAP = null;    // Squares -> peers map
+let UNITS = null;               // All units (row, column, or box)
+let SQUARE_UNITS_MAP = null;    // Squares -> units map
+let SQUARE_PEERS_MAP = null;    // Squares -> peers map
 
-var MIN_GIVENS = 17;            // Minimum number of givens 
-var NR_SQUARES = 81;            // Number of squares
+const MIN_GIVENS = 17;            // Minimum number of givens 
+const NR_SQUARES = 81;            // Number of squares
 
 // Define difficulties by how many squares are given to the player in a new
 // puzzle.
-var DIFFICULTY = {
+const DIFFICULTY = {
     "easy":         62,
     "medium":       53,
     "hard":         44,
@@ -100,28 +100,28 @@ sudoku.generate = function(difficulty, unique){
     unique = unique || true;
     
     // Get a set of squares and all possible candidates for each square
-    var blank_board = "";
+    let blank_board = "";
     for(var i = 0; i < NR_SQUARES; ++i){
         blank_board += '.';
     }
-    var candidates = sudoku._get_candidates_map(blank_board);
+    const candidates = sudoku._get_candidates_map(blank_board);
     
     // For each item in a shuffled list of squares
-    var shuffled_squares = sudoku._shuffle(SQUARES);
+    const shuffled_squares = sudoku._shuffle(SQUARES);
     for(var si in shuffled_squares){
         var square = shuffled_squares[si];
         
         // If an assignment of a random chioce causes a contradictoin, give
         // up and try again
-        var rand_candidate_idx = 
+        const rand_candidate_idx = 
                 sudoku._rand_range(candidates[square].length);
-        var rand_candidate = candidates[square][rand_candidate_idx];
+        const rand_candidate = candidates[square][rand_candidate_idx];
         if(!sudoku._assign(candidates, square, rand_candidate)){
             break;
         }
         
         // Make a list of all single candidates
-        var single_candidates = [];
+        const single_candidates = [];
         for(var si in SQUARES){
             var square = SQUARES[si];
             
@@ -134,8 +134,8 @@ sudoku.generate = function(difficulty, unique){
         // at least 8, return the puzzle!
         if(single_candidates.length >= difficulty && 
                 sudoku._strip_dups(single_candidates).length >= 8){
-            var board = "";
-            var givens_idxs = [];
+            let board = "";
+            let givens_idxs = [];
             for(var i in SQUARES){
                 var square = SQUARES[i];
                 if(candidates[square].length == 1){
@@ -148,11 +148,11 @@ sudoku.generate = function(difficulty, unique){
             
             // If we have more than `difficulty` givens, remove some random
             // givens until we're down to exactly `difficulty`
-            var nr_givens = givens_idxs.length;
+            const nr_givens = givens_idxs.length;
             if(nr_givens > difficulty){
                 givens_idxs = sudoku._shuffle(givens_idxs);
                 for(var i = 0; i < nr_givens - difficulty; ++i){
-                    var target = parseInt(givens_idxs[i]);
+                    const target = parseInt(givens_idxs[i]);
                     board = board.substr(0, target) + sudoku.BLANK_CHAR + 
                         board.substr(target + 1);
                 }
@@ -184,31 +184,31 @@ sudoku.solve = function(board, reverse){
     */
     
     // Assure a valid board
-    var report = sudoku.validate_board(board);
+    const report = sudoku.validate_board(board);
     if(report !== true){
         throw report;
     }
     
     // Check number of givens is at least MIN_GIVENS
-    var nr_givens = 0;
-    for(var i in board){
+    let nr_givens = 0;
+    for(const i in board){
         if(board[i] !== sudoku.BLANK_CHAR && sudoku._in(board[i], sudoku.DIGITS)){
             ++nr_givens;
         }
     }
     if(nr_givens < MIN_GIVENS){
-        throw "Too few givens. Minimum givens is " + MIN_GIVENS;
+        throw `Too few givens. Minimum givens is ${  MIN_GIVENS}`;
     }
 
     // Default reverse to false
     reverse = reverse || false;
 
-    var candidates = sudoku._get_candidates_map(board);
-    var result = sudoku._search(candidates, reverse);
+    const candidates = sudoku._get_candidates_map(board);
+    const result = sudoku._search(candidates, reverse);
     
     if(result){
-        var solution = "";
-        for(var square in result){
+        let solution = "";
+        for(const square in result){
             solution += result[square];
         }
         return solution;
@@ -225,13 +225,13 @@ sudoku.get_candidates = function(board){
     */
     
     // Assure a valid board
-    var report = sudoku.validate_board(board);
+    const report = sudoku.validate_board(board);
     if(report !== true){
         throw report;
     }
     
     // Get a candidates map
-    var candidates_map = sudoku._get_candidates_map(board);
+    const candidates_map = sudoku._get_candidates_map(board);
     
     // If there's an error, return false
     if(!candidates_map){
@@ -239,11 +239,11 @@ sudoku.get_candidates = function(board){
     }
     
     // Transform candidates map into grid
-    var rows = [];
-    var cur_row = [];
-    var i = 0;
-    for(var square in candidates_map){
-        var candidates = candidates_map[square];
+    const rows = [];
+    let cur_row = [];
+    let i = 0;
+    for(const square in candidates_map){
+        const candidates = candidates_map[square];
         cur_row.push(candidates);
         if(i % 9 == 8){
             rows.push(cur_row);
@@ -261,26 +261,26 @@ sudoku._get_candidates_map = function(board){
     */
     
     // Assure a valid board
-    var report = sudoku.validate_board(board);
+    const report = sudoku.validate_board(board);
     if(report !== true){
         throw report;
     }
     
-    var candidate_map = {};
-    var squares_values_map = sudoku._get_square_vals_map(board);
+    const candidate_map = {};
+    const squares_values_map = sudoku._get_square_vals_map(board);
     
     // Start by assigning every digit as a candidate to every square
-    for(var si in SQUARES){
+    for(const si in SQUARES){
         candidate_map[SQUARES[si]] = sudoku.DIGITS;
     }
     
     // For each non-blank square, assign its value in the candidate map and
     // propigate.
-    for(var square in squares_values_map){
-        var val = squares_values_map[square];
+    for(const square in squares_values_map){
+        const val = squares_values_map[square];
         
         if(sudoku._in(val, sudoku.DIGITS)){
-            var new_candidates = sudoku._assign(candidate_map, square, val);
+            const new_candidates = sudoku._assign(candidate_map, square, val);
             
             // Fail if we can't assign val to square
             if(!new_candidates){
@@ -308,8 +308,8 @@ sudoku._search = function(candidates, reverse){
     
     // If only one candidate for every square, we've a solved puzzle!
     // Return the candidates map.
-    var max_nr_candidates = 0;
-    var max_candidates_square = null;
+    let max_nr_candidates = 0;
+    let max_candidates_square = null;
     for(var si in SQUARES){
         var square = SQUARES[si];
         
@@ -325,8 +325,8 @@ sudoku._search = function(candidates, reverse){
     }
     
     // Choose the blank square with the fewest possibilities > 1
-    var min_nr_candidates = 10;
-    var min_candidates_square = null;
+    let min_nr_candidates = 10;
+    let min_candidates_square = null;
     for(si in SQUARES){
         var square = SQUARES[si];
         
@@ -342,7 +342,7 @@ sudoku._search = function(candidates, reverse){
     // starting with the one with fewest candidates.
     
     // Rotate through the candidates forwards
-    var min_candidates = candidates[min_candidates_square];
+    const min_candidates = candidates[min_candidates_square];
     if(!reverse){
         for(var vi in min_candidates){
             var val = min_candidates[vi];
@@ -390,19 +390,19 @@ sudoku._assign = function(candidates, square, val){
     */
 
     // Grab a list of canidates without 'val'
-    var other_vals = candidates[square].replace(val, "");
+    const other_vals = candidates[square].replace(val, "");
 
     // Loop through all other values and eliminate them from the candidates 
     // at the current square, and propigate. If at any point we get a 
     // contradiction, return false.
-    for(var ovi in other_vals){
-        var other_val = other_vals[ovi];
+    for(const ovi in other_vals){
+        const other_val = other_vals[ovi];
 
-        var candidates_next =
+        const candidates_next =
             sudoku._eliminate(candidates, square, other_val);
 
         if(!candidates_next){
-            //console.log("Contradiction found by _eliminate.");
+            // console.log("Contradiction found by _eliminate.");
             return false;
         }
     }
@@ -429,12 +429,12 @@ sudoku._eliminate = function(candidates, square, val){
         
     // If the square has only candidate left, eliminate that value from its 
     // peers
-    var nr_candidates = candidates[square].length;
+    const nr_candidates = candidates[square].length;
     if(nr_candidates === 1){
-        var target_val = candidates[square];
+        const target_val = candidates[square];
         
-        for(var pi in SQUARE_PEERS_MAP[square]){
-            var peer = SQUARE_PEERS_MAP[square][pi];
+        for(const pi in SQUARE_PEERS_MAP[square]){
+            const peer = SQUARE_PEERS_MAP[square][pi];
             
             var candidates_new = 
                     sudoku._eliminate(candidates, peer, target_val);
@@ -451,12 +451,12 @@ sudoku._eliminate = function(candidates, square, val){
     }
     
     // If a unit is reduced to only one place for a value, then assign it
-    for(var ui in SQUARE_UNITS_MAP[square]){
-        var unit = SQUARE_UNITS_MAP[square][ui];
+    for(const ui in SQUARE_UNITS_MAP[square]){
+        const unit = SQUARE_UNITS_MAP[square][ui];
         
-        var val_places = [];
-        for(var si in unit){
-            var unit_square = unit[si];
+        const val_places = [];
+        for(const si in unit){
+            const unit_square = unit[si];
             if(sudoku._in(val, candidates[unit_square])){
                 val_places.push(unit_square);
             }
@@ -468,7 +468,7 @@ sudoku._eliminate = function(candidates, square, val){
             return false;
             
         // Otherwise the value can only be in one place. Assign it there.
-        } else if(val_places.length === 1){
+        } if(val_places.length === 1){
             var candidates_new = 
                 sudoku._assign(candidates, val_places[0], val);
             
@@ -489,14 +489,14 @@ sudoku._eliminate = function(candidates, square, val){
 sudoku._get_square_vals_map = function(board){
     /* Return a map of squares -> values
     */
-    var squares_vals_map = {};
+    const squares_vals_map = {};
     
     // Make sure `board` is a string of length 81
     if(board.length != SQUARES.length){
         throw "Board/squares length mismatch.";
         
     } else {
-        for(var i in SQUARES){
+        for(const i in SQUARES){
             squares_vals_map[SQUARES[i]] = board[i];
         }
     }
@@ -507,19 +507,19 @@ sudoku._get_square_vals_map = function(board){
 sudoku._get_square_units_map = function(squares, units){
     /* Return a map of `squares` and their associated units (row, col, box)
     */
-    var square_unit_map = {};
+    const square_unit_map = {};
 
     // For every square...
-    for(var si in squares){
-        var cur_square = squares[si];
+    for(const si in squares){
+        const cur_square = squares[si];
 
         // Maintain a list of the current square's units
-        var cur_square_units = [];
+        const cur_square_units = [];
 
         // Look through the units, and see if the current square is in it,
         // and if so, add it to the list of of the square's units.
-        for(var ui in units){
-            var cur_unit = units[ui];
+        for(const ui in units){
+            const cur_unit = units[ui];
 
             if(cur_unit.indexOf(cur_square) !== -1){
                 cur_square_units.push(cur_unit);
@@ -537,22 +537,22 @@ sudoku._get_square_peers_map = function(squares, units_map){
     /* Return a map of `squares` and their associated peers, i.e., a set of
     other squares in the square's unit.
     */
-    var square_peers_map = {};
+    const square_peers_map = {};
 
     // For every square...
-    for(var si in squares){
-        var cur_square = squares[si];
-        var cur_square_units = units_map[cur_square];
+    for(const si in squares){
+        const cur_square = squares[si];
+        const cur_square_units = units_map[cur_square];
 
         // Maintain list of the current square's peers
-        var cur_square_peers = [];
+        const cur_square_peers = [];
 
         // Look through the current square's units map...
-        for(var sui in cur_square_units){
-            var cur_unit = cur_square_units[sui];
+        for(const sui in cur_square_units){
+            const cur_unit = cur_square_units[sui];
 
-            for(var ui in cur_unit){
-                var cur_unit_square = cur_unit[ui];
+            for(const ui in cur_unit){
+                const cur_unit_square = cur_unit[ui];
 
                 if(cur_square_peers.indexOf(cur_unit_square) === -1 && 
                         cur_unit_square !== cur_square){
@@ -571,23 +571,23 @@ sudoku._get_square_peers_map = function(squares, units_map){
 sudoku._get_all_units = function(rows, cols){
     /* Return a list of all units (rows, cols, boxes)
     */
-    var units = [];
+    const units = [];
 
     // Rows
-    for(var ri in rows){
+    for(const ri in rows){
         units.push(sudoku._cross(rows[ri], cols));
     }
 
     // Columns
-    for(var ci in cols){
+    for(const ci in cols){
         units.push(sudoku._cross(rows, cols[ci]));
     }
 
     // Boxes
-    var row_squares = ["ABC", "DEF", "GHI"];
-    var col_squares = ["123", "456", "789"];
-    for(var rsi in row_squares){
-        for(var csi in col_squares){
+    const row_squares = ["ABC", "DEF", "GHI"];
+    const col_squares = ["123", "456", "789"];
+    for(const rsi in row_squares){
+        for(const csi in col_squares){
             units.push(sudoku._cross(row_squares[rsi], col_squares[csi]));
         }
     }
@@ -601,9 +601,9 @@ sudoku._get_all_units = function(rows, cols){
 sudoku.board_string_to_grid = function(board_string){
     /* Convert a board string to a two-dimensional array
     */
-    var rows = [];
-    var cur_row = [];
-    for(var i in board_string){
+    const rows = [];
+    let cur_row = [];
+    for(const i in board_string){
         cur_row.push(board_string[i]);
         if(i % 9 == 8){
             rows.push(cur_row);
@@ -616,9 +616,9 @@ sudoku.board_string_to_grid = function(board_string){
 sudoku.board_grid_to_string = function(board_grid){
     /* Convert a board grid to a string
     */
-    var board_string = "";
-    for(var r = 0; r < 9; ++r){
-        for(var c = 0; c < 9; ++c){
+    let board_string = "";
+    for(let r = 0; r < 9; ++r){
+        for(let c = 0; c < 9; ++c){
             board_string += board_grid[r][c];
         }   
     }
@@ -634,21 +634,21 @@ sudoku.print_board = function(board){
     */
     
     // Assure a valid board
-    var report = sudoku.validate_board(board);
+    const report = sudoku.validate_board(board);
     if(report !== true){
         throw report;
     }
     
-    var V_PADDING = " ";  // Insert after each square
-    var H_PADDING = '\n'; // Insert after each row
+    const V_PADDING = " ";  // Insert after each square
+    const H_PADDING = '\n'; // Insert after each row
     
-    var V_BOX_PADDING = "  "; // Box vertical padding
-    var H_BOX_PADDING = '\n'; // Box horizontal padding
+    const V_BOX_PADDING = "  "; // Box vertical padding
+    const H_BOX_PADDING = '\n'; // Box horizontal padding
 
-    var display_string = "";
+    let display_string = "";
     
-    for(var i in board){
-        var square = board[i];
+    for(const i in board){
+        const square = board[i];
         
         // Add the square and some padding
         display_string += square + V_PADDING;
@@ -684,15 +684,15 @@ sudoku.validate_board = function(board){
     
     // Invalid board length
     if(board.length !== NR_SQUARES){
-        return "Invalid board size. Board must be exactly " + NR_SQUARES +
-                " squares.";
+        return `Invalid board size. Board must be exactly ${  NR_SQUARES 
+                } squares.`;
     }
     
     // Check for invalid characters
-    for(var i in board){
+    for(const i in board){
         if(!sudoku._in(board[i], sudoku.DIGITS) && board[i] !== sudoku.BLANK_CHAR){
-            return "Invalid board character encountered at index " + i + 
-                    ": " + board[i];
+            return `Invalid board character encountered at index ${  i  
+                    }: ${  board[i]}`;
         }
     }
     
@@ -705,9 +705,9 @@ sudoku._cross = function(a, b){
     sudoku._cross("abc", "123") ->
     ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3"]
     */
-    var result = [];
-    for(var ai in a){
-        for(var bi in b){
+    const result = [];
+    for(const ai in a){
+        for(const bi in b){
             result.push(a[ai] + b[bi]);
         }
     }
@@ -724,7 +724,7 @@ sudoku._first_true = function(seq){
     /* Return the first element in `seq` that is true. If no element is
     true, return false.
     */
-    for(var i in seq){
+    for(const i in seq){
         if(seq[i]){
             return seq[i];
         }
@@ -737,13 +737,13 @@ sudoku._shuffle = function(seq){
     */
     
     // Create an array of the same size as `seq` filled with false
-    var shuffled = [];
+    const shuffled = [];
     for(var i = 0; i < seq.length; ++i){
         shuffled.push(false);
     }
     
     for(var i in seq){
-        var ti = sudoku._rand_range(seq.length);
+        let ti = sudoku._rand_range(seq.length);
         
         while(shuffled[ti]){
             ti = (ti + 1) > (seq.length - 1) ? 0 : (ti + 1);
@@ -763,18 +763,18 @@ sudoku._rand_range = function(max, min){
     min = min || 0;
     if(max){
         return Math.floor(Math.random() * (max - min)) + min;
-    } else {
+    } 
         throw "Range undefined";
-    }
+    
 };
 
 sudoku._strip_dups = function(seq){
     /* Strip duplicate values from `seq`
     */
-    var seq_set = [];
-    var dup_map = {};
-    for(var i in seq){
-        var e = seq[i];
+    const seq_set = [];
+    const dup_map = {};
+    for(const i in seq){
+        const e = seq[i];
         if(!dup_map[e]){
             seq_set.push(e);
             dup_map[e] = true;
