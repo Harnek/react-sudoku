@@ -29,10 +29,12 @@ function Board(props) {
   }, [gameOver, state, timer]);
 
   const handleEvent = e => {
+    e.preventDefault();
     const x = e.target.parentNode.rowIndex;
     const y = e.target.cellIndex;
 
-    if (e.type === 'mousedown') {
+    if (e.type === 'mousedown' || e.type === 'touchstart') {
+      
       const id = setTimeout(() => {
         setClickId(() => null);
       }, 250);

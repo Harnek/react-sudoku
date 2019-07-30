@@ -24,6 +24,8 @@ function Cell(props) {
       className={classes.join(' ')}
       onMouseDown={e => handleEvent(e)}
       onMouseUp={e => handleEvent(e)}
+      onTouchStart={e => handleEvent(e)}
+      onTouchEnd={e => handleEvent(e)}
     >
       {value}
     </td>

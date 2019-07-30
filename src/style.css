@@ -101,10 +101,14 @@ p, th, td, li, dd, dt, ul, ol, blockquote, q, acronym, abbr, a, input, select, t
   width: 35px;
   height: 35px;
   font-size: 1.2rem;
-  /* font-weight: 400; */
   cursor: pointer;
-  transition: all 0.5s ease;
   color: black;
+
+  /* transition: background-color 250ms ease;
+  -webkit-transition: background-color 250ms ease;
+  -moz-transition: background-color 250ms ease;
+  -ms-transition: background-color 250ms ease;
+  */
 }
 
 .preFilled {
