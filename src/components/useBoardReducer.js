@@ -78,22 +78,32 @@ function redo(state) {
   };
 }
 
-function reducer(state, action) {
-  switch (action.type) {
+function reducer(state, { type, payload }) {
+  switch (type) {
     case 'init':
-      return init(action.payload.board);
+      return init(payload.board);
     case 'update':
-      return update(state, action.payload);
+      return update(state, payload);
     case 'clear':
-      return clear(state, action.payload);
+      return clear(state, payload);
     case 'choice':
       return {
         ...state,
-        choice: action.payload.choice,
-        selected: null,
+        selected:
+          state.selected === null || state.selected !== payload.choice
+            ? payload.choice
+            : null,
+        choice: payload.choice,
       };
     case 'select':
-      return { ...state, selected: action.payload.selected };
+      return {
+        ...state,
+        selected:
+          state.selected === payload.selected
+            ? null
+            : payload.selected,
+        choice: payload.selected,
+      };
     case 'undo':
       return undo(state);
     case 'redo':
@@ -105,4 +115,4 @@ function reducer(state, action) {
   }
 }
 
-export {reducer as default, init};
+export { reducer as default, init };

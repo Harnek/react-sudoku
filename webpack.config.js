@@ -11,11 +11,8 @@ module.exports = {
   plugins: [new webpack.HotModuleReplacementPlugin()],
   devServer: {
     contentBase: './dist',
-    // watchContentBase: true,
     hot: true,
-    historyApiFallback: true, // will redirect 404s to /index.html
   },
-  // mode: 'development',
   module: {
     rules: [
       {
@@ -25,7 +22,7 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: ['babel-loader'],// , 'eslint-loader'],
+        use: ['babel-loader', 'eslint-loader'],
       },
       {
         test: /\.ttf$/, 
