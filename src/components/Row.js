@@ -14,8 +14,7 @@ function Row(props) {
 
   return (
     <tr className="row">
-      {cols.map((value, colIndex) => {
-        return (
+      {cols.map((value, colIndex) => (
           <Cell
             value={value}
             status={status[rowIndex][colIndex]}
@@ -24,8 +23,7 @@ function Row(props) {
             handleEvent={handleEvent}
             key={colIndex}
           />
-        );
-      })}
+        ))}
     </tr>
   );
 }
